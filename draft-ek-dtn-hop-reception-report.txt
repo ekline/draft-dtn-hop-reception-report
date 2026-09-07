@@ -9,7 +9,7 @@ Expires: 11 March 2027
 
 
                            TODO - Your title
-                  draft-todo-yourname-protocol-latest
+                draft-ek-dtn-hop-reception-report-latest
 
 Abstract
 
@@ -21,8 +21,8 @@ About This Document
 
    The latest revision of this draft can be found at
    https://example.com/LATEST.  Status information for this document may
-   be found at https://datatracker.ietf.org/doc/draft-todo-yourname-
-   protocol/.
+   be found at https://datatracker.ietf.org/doc/draft-ek-dtn-hop-
+   reception-report/.
 
    Discussion of this document takes place on the WG Working Group
    mailing list (mailto:WG@example.com), which is archived at
