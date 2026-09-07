@@ -90,6 +90,41 @@ is outside the scope of this document. In particular, this document does
 not define a custody transfer mechanism, and the report does not transfer
 any responsibility for the bundle between nodes.
 
+## Open Issues {#open-issues}
+
+RFC EDITOR: Please remove this section before publication.
+
+The following points are noted for working group discussion:
+
+Reception timestamp:
+: Whether a Bundle Status Report's status item includes a timestamp is
+  controlled solely by the "Report status time" flag in the subject bundle's
+  primary block, which only the source can set. The forwarding node that
+  requests a hop reception report therefore cannot request a timestamp.
+  Options include leaving this as-is (no change to the Bundle Status Report
+  rules), or defining a flag in this block's flags field that also causes
+  the reception time to be included.
+
+Reason code:
+: This document uses reason code 0 ("No additional information"). A
+  dedicated reason code would let the recipient of a report distinguish a
+  hop reception report from a source-requested reception report when both
+  are addressed to the same endpoint.
+
+Peer identity check:
+: {{receiving}} makes correspondence between the Previous Node block's node
+  ID and the convergence-layer peer a hard validity requirement (MUST).
+  This means the request is never honored over an unauthenticated
+  convergence layer with no configured peer identity. An alternative is a
+  SHOULD, with the reflection risk addressed only in
+  {{security}}.
+
+Reports after reassembly:
+: {{fragmentation}} permits a node that reassembles fragments before
+  processing extension blocks to send a single report for the reassembled
+  bundle rather than one per fragment. Whether to require per-fragment
+  reports instead is open.
+
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
@@ -218,7 +253,7 @@ If the bundle's primary block also requests reception status reports and
 the bundle's report-to endpoint ID is the same as the node ID in the
 Previous Node block, a single Bundle Status Report satisfies both requests.
 
-## Interaction with Fragmentation
+## Interaction with Fragmentation {#fragmentation}
 
 If a node fragments a bundle containing a Hop Reception Report Request
 block, the block is replicated in each fragment when bit 0 of its block
