@@ -55,9 +55,9 @@ typically indicate that the transfer completed. That indication, however,
 reflects only what the convergence layer or underlying transport can
 observe: that the data reached the peer's convergence layer (or, in some
 cases, only the peer's transport stack). It does not indicate that the
-peer's Bundle Protocol Agent (BPA) has accepted the bundle and taken
-responsibility for it. If the peer's convergence layer or BPA fails between
-transport-level receipt and BPA acceptance, the bundle may be lost while
+peer's Bundle Protocol Agent (BPA) has received the bundle and accepted it
+for processing. If the peer's convergence layer or BPA fails between
+transport-level receipt and BPA processing, the bundle may be lost while
 the forwarding node believes it was successfully transferred.
 
 BPv7 provides Bundle Status Reports ({{!RFC9171, Section 6.1.1}}) as a
@@ -78,13 +78,17 @@ report is an ordinary Bundle Status Report with the "reporting node
 received bundle" status asserted. The block is removed by the receiving
 node and so never travels more than one hop.
 
-The resulting signal, "the next-hop BPA has received this bundle", is
-strictly stronger than any convergence-layer completion indication and is
-independent of which convergence layer is in use. How a forwarding BPA
-uses this signal, for example to decide when a forwarded bundle may be
-released from local storage, is a matter of local policy and is outside
-the scope of this document. In particular, this document does not define a
-custody transfer mechanism.
+The resulting signal, "the next-hop BPA has received this bundle", has
+exactly the meaning of the "reporting node received bundle" status
+assertion of {{!RFC9171, Section 6.1.1}}: the bundle completed the
+reception processing of {{!RFC9171, Section 5.6}} at the receiving node. It
+says nothing about what the receiving node will subsequently do with the
+bundle. It is nonetheless strictly stronger than any convergence-layer
+completion indication and is independent of which convergence layer is in
+use. How a forwarding BPA uses this signal is a matter of local policy and
+is outside the scope of this document. In particular, this document does
+not define a custody transfer mechanism, and the report does not transfer
+any responsibility for the bundle between nodes.
 
 # Conventions and Definitions
 
@@ -180,8 +184,9 @@ inserting its own.
 
 Upon receiving a bundle containing a Hop Reception Report Request block, a
 node that implements this specification SHALL process the block as part of
-bundle reception ({{!RFC9171, Section 5.6}}), after the bundle has been
-accepted by the BPA and before any forwarding decision is made.
+bundle reception ({{!RFC9171, Section 5.6}}), at the point at which a
+source-requested reception status report would be generated, and before any
+forwarding decision is made.
 
 The node SHALL determine whether the request is valid. The request is
 valid if all of the following hold:
@@ -246,10 +251,11 @@ forwarding node has direct control over when it is incurred.
 
 This document does not define custody transfer. It provides a forwarding
 node with a positive indication that the next hop's BPA has received a
-bundle; what the forwarding node does with that indication, including
-whether and for how long it retains the bundle pending the report, is
-local policy. No obligation is placed on the receiving node beyond
-generating the report.
+bundle, nothing more. The report does not signify that the receiving node
+has undertaken to forward, deliver, or retain the bundle, and the receiving
+node incurs no responsibility toward the bundle beyond that which it would
+have under {{!RFC9171}} absent this block. What the forwarding node does
+with the indication is local policy.
 
 ## Convergence Layer Completion Indications
 
@@ -298,7 +304,7 @@ since they did not exist at the source.
 ## Traffic Analysis
 
 Reception reports reveal to an observer of the link that a bundle was
-accepted by the receiving BPA, and their timing may reveal processing
+received by the receiving BPA, and their timing may reveal processing
 latency. Convergence layers providing confidentiality, such as TCPCLv4 with
 TLS, conceal this from off-link observers.
 
@@ -320,5 +326,5 @@ Protocol Version 7, as follows:
 
 This block was motivated by discussion of the completion semantics of the
 QUIC Bundle Protocol Convergence Layer, and the observation that no
-convergence layer can, on its own, assert that a peer BPA has accepted a
+convergence layer can, on its own, assert that a peer BPA has received a
 bundle.
