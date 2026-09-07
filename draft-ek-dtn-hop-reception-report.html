@@ -1157,6 +1157,11 @@ Status Report. No new administrative record types are defined.<a href="#section-
 <nav class="toc"><ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-open-issues" class="internal xref">Open Issues</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
@@ -1165,7 +1170,7 @@ Status Report. No new administrative record types are defined.<a href="#section-
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-hop-reception-report-reques" class="internal xref">Hop Reception Report Request Block</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
-                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-block-definition" class="internal xref">Block Definition</a></p>
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-block-definition" class="internal xref">Block Definition</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-dependence-on-the-previous-" class="internal xref">Dependence on the Previous Node Block</a></p>
@@ -1282,6 +1287,54 @@ use. How a forwarding BPA uses this signal is a matter of local policy and
 is outside the scope of this document. In particular, this document does
 not define a custody transfer mechanism, and the report does not transfer
 any responsibility for the bundle between nodes.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<div id="open-issues">
+<section id="section-1.1">
+        <h3 id="name-open-issues">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-open-issues" class="section-name selfRef">Open Issues</a>
+        </h3>
+<p id="section-1.1-1">RFC EDITOR: Please remove this section before publication.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">The following points are noted for working group discussion:<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-1.1-3">
+          <dt id="section-1.1-3.1">Reception timestamp:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-3.2">
+            <p id="section-1.1-3.2.1">Whether a Bundle Status Report's status item includes a timestamp is
+controlled solely by the "Report status time" flag in the subject bundle's
+primary block, which only the source can set. The forwarding node that
+requests a hop reception report therefore cannot request a timestamp.
+Options include leaving this as-is (no change to the Bundle Status Report
+rules), or defining a flag in this block's flags field that also causes
+the reception time to be included.<a href="#section-1.1-3.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-3.3">Reason code:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-3.4">
+            <p id="section-1.1-3.4.1">This document uses reason code 0 ("No additional information"). A
+dedicated reason code would let the recipient of a report distinguish a
+hop reception report from a source-requested reception report when both
+are addressed to the same endpoint.<a href="#section-1.1-3.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-3.5">Peer identity check:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-3.6">
+            <p id="section-1.1-3.6.1"><a href="#receiving" class="auto internal xref">Section 4.2</a> makes correspondence between the Previous Node block's node
+ID and the convergence-layer peer a hard validity requirement (<span class="bcp14">MUST</span>).
+This means the request is never honored over an unauthenticated
+convergence layer with no configured peer identity. An alternative is a
+<span class="bcp14">SHOULD</span>, with the reflection risk addressed only in
+<a href="#security" class="auto internal xref">Section 6</a>.<a href="#section-1.1-3.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-3.7">Reports after reassembly:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-3.8">
+            <p id="section-1.1-3.8.1"><a href="#fragmentation" class="auto internal xref">Section 4.3</a> permits a node that reassembles fragments before
+processing extension blocks to send a single report for the reassembled
+bundle rather than one per fragment. Whether to require per-fragment
+reports instead is open.<a href="#section-1.1-3.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+</section>
+</div>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1462,7 +1515,7 @@ the bundle's report-to endpoint ID is the same as the node ID in the
 Previous Node block, a single Bundle Status Report satisfies both requests.<a href="#section-4.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="interaction-with-fragmentation">
+<div id="fragmentation">
 <section id="section-4.3">
         <h3 id="name-interaction-with-fragmentat">
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-interaction-with-fragmentat" class="section-name selfRef">Interaction with Fragmentation</a>
