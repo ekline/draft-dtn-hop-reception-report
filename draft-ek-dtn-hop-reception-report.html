@@ -7,15 +7,19 @@
 <title>Bundle Protocol Hop Reception Reports</title>
 <meta content="Erik Kline" name="author">
 <meta content="
-       This document defines the Hop Reception Report Request block, a Bundle
-Protocol version 7 (BPv7) extension block by which a forwarding node
-requests that the next-hop node report reception of the bundle back to it.
-The request is addressed implicitly, using the node ID already carried in
-the bundle's Previous Node block. This document also defines the Hop
-Reception Report administrative record, which batches positive reception
-assertions for one or more bundles or fragments for the same requesting
-neighbor. These reports do not transfer custody or responsibility for the
-reported bundles. 
+       This document defines the Hop Reception Report Request block for Bundle
+Protocol version 7 (BPv7). A sending node uses this extension block to
+request a reception report from the next-hop node. The bundle source can
+also request a report on initial transmission. 
+       The report goes to the sender's administrative endpoint. The receiver
+validates this endpoint from the Previous Node block. If that block is
+absent, it uses convergence-layer peer authentication or trusted
+configuration to establish the sender's identity and administrative
+endpoint. 
+       This document also defines the Hop Reception Report administrative record.
+It batches positive reception assertions for one or more bundles or
+fragments for the same requesting neighbor. These reports do not transfer
+custody or responsibility for the reported bundles. 
     " name="description">
 <meta content="xml2rfc 3.34.1" name="generator">
 <meta content="DTN" name="keyword">
@@ -1088,15 +1092,19 @@ svg {
 <h1 id="title">Bundle Protocol Hop Reception Reports</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document defines the Hop Reception Report Request block, a Bundle
-Protocol version 7 (BPv7) extension block by which a forwarding node
-requests that the next-hop node report reception of the bundle back to it.
-The request is addressed implicitly, using the node ID already carried in
-the bundle's Previous Node block. This document also defines the Hop
-Reception Report administrative record, which batches positive reception
-assertions for one or more bundles or fragments for the same requesting
-neighbor. These reports do not transfer custody or responsibility for the
-reported bundles.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document defines the Hop Reception Report Request block for Bundle
+Protocol version 7 (BPv7). A sending node uses this extension block to
+request a reception report from the next-hop node. The bundle source can
+also request a report on initial transmission.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">The report goes to the sender's administrative endpoint. The receiver
+validates this endpoint from the Previous Node block. If that block is
+absent, it uses convergence-layer peer authentication or trusted
+configuration to establish the sender's identity and administrative
+endpoint.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+<p id="section-abstract-3">This document also defines the Hop Reception Report administrative record.
+It batches positive reception assertions for one or more bundles or
+fragments for the same requesting neighbor. These reports do not transfer
+custody or responsibility for the reported bundles.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1171,7 +1179,12 @@ reported bundles.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-eid-comparison" class="internal xref">EID Comparison</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-hop-reception-report-reques" class="internal xref">Hop Reception Report Request Block</a></p>
@@ -1180,7 +1193,7 @@ reported bundles.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-block-definition" class="internal xref">Block Definition</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
-                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-dependence-on-the-previous-" class="internal xref">Dependence on the Previous Node Block</a></p>
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-identification-of-the-reque" class="internal xref">Identification of the Requesting Node</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-block-processing-control-fl" class="internal xref">Block Processing Control Flags</a></p>
@@ -1199,7 +1212,7 @@ reported bundles.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-node-processing" class="internal xref">Node Processing</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-forwarding-node" class="internal xref">Forwarding Node</a></p>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-requesting-node" class="internal xref">Requesting Node</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-receiving-node" class="internal xref">Receiving Node</a></p>
@@ -1246,6 +1259,12 @@ reported bundles.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
                 <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-invalid-records" class="internal xref">Invalid Records</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.5">
+                <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="auto internal xref">7.5</a>.  <a href="#name-initial-transmission-withou" class="internal xref">Initial Transmission without a Previous Node Block</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.6">
+                <p id="section-toc.1-1.7.2.6.1"><a href="#section-7.6" class="auto internal xref">7.6</a>.  <a href="#name-conflicting-previous-node-i" class="internal xref">Conflicting Previous Node Identity</a></p>
 </li>
             </ul>
 </li>
@@ -1298,53 +1317,58 @@ reported bundles.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">When a Bundle Protocol version 7 (BPv7) <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>]</span> node forwards a bundle
-to a neighboring node, the Convergence Layer Adapter (CLA) it uses can
-typically indicate that the transfer completed. That indication, however,
-reflects only what the convergence layer or underlying transport can
-observe: that the data reached the peer's convergence layer (or, in some
-cases, only the peer's transport stack). It does not indicate that the
-peer's Bundle Protocol Agent (BPA) has received the bundle. If the peer's convergence layer or BPA fails between
-transport-level receipt and BPA processing, the bundle may be lost while
-the forwarding node believes it was successfully transferred.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">BPv7 provides Bundle Status Reports (<span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-6.1.1" class="relref">Section 6.1.1</a></span>) as a
-mechanism for nodes to report the reception, forwarding, delivery, or
-deletion of a bundle. However, whether reports are requested, and where
-they are sent, is determined solely by the bundle's source via the primary
-block, which is immutable after creation. A source can request reception
-reports from nodes along the path, subject to their reporting policies,
-but a forwarding node cannot use those primary-block flags to request a
-report for its own purposes.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">This document defines the Hop Reception Report Request block, an extension
-block that a forwarding node inserts to request that the next-hop node
-send a reception report back to the forwarding node. The block carries no
-addressing information of its own: the report is sent to the validated
-node ID in the bundle's Previous Node block (<span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.4.1" class="relref">Section 4.4.1</a></span>).
-The response uses a new administrative record type, Hop Reception Report,
-containing a nonempty batch of positive reception assertions. Ordinary
-Bundle Status Reports are already administrative records; the new type
-provides different content and batching semantics, rather than changing
-the administrative-record flag on an ordinary status report. The request
-remains an extension block in the subject bundle, not a separate
-administrative-record exchange.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">The resulting signal, "the next-hop BPA has received this bundle", has
-exactly the meaning of the "reporting node received bundle" status
-assertion of <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-6.1.1" class="relref">Section 6.1.1</a></span>. That assertion is generated at
-Step 2 of <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-5.6" class="relref">Section 5.6</a></span>, before subsequent validation. It does
-not establish successful later validation, completion of all reception
-processing, durable storage, custody, forwarding, delivery, or continued
-retention. It is an explicit BPA-level indication independent of the
-convergence layer, not a claim that every convergence-layer completion
-indication is weaker. How a forwarding BPA uses this signal is a matter
-of local policy and is outside the scope of this document. In particular,
-this document does not define a custody transfer mechanism, and the report
-does not transfer any responsibility for the bundle between nodes.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">"One hop" describes the reception event and the requesting neighbor.
-Supporting receiving nodes remove the request block before onward
-forwarding, and the required block processing control flags cause
-non-supporting nodes to discard it. Addressing the report carrier bundle
-to the requesting neighbor does not constrain its route to the immediate
-link. Return routing is a matter of local policy.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-1">A Bundle Protocol version 7 (BPv7) <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>]</span> node uses a Convergence
+Layer Adapter (CLA) to send a bundle to a neighbor. The CLA can usually
+indicate that the transfer completed. The guarantees of that indication
+depend on the convergence-layer specification and implementation.
+Completion does not necessarily establish that the peer's Bundle Protocol
+Agent (BPA) received the bundle. If completion indicates only
+transport-level receipt, a failure before BPA reception can still cause
+bundle loss.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">BPv7 Bundle Status Reports (<span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-6.1.1" class="relref">Section 6.1.1</a></span>) report bundle
+reception, forwarding, delivery, or deletion. Only the bundle source can
+request these reports and select their destination. It sets these values
+in the primary block, which cannot change after creation. A source can
+request reception reports from nodes along the path, subject to their
+reporting policies. A forwarding node cannot change these primary-block
+flags to request a report for itself.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">The Hop Reception Report Request block lets a sending node request a
+reception report from its next hop. Both transit-forwarding nodes and
+bundle sources can use it. The request block contains no address.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">If a Previous Node block (<span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.4.1" class="relref">Section 4.4.1</a></span>) is present, the
+requesting node puts its own administrative endpoint ID in that block.
+The ID must be consistent with the established sending-peer identity. If
+the block is absent, the receiver can use convergence-layer peer
+authentication or trusted configuration. That association must establish
+the immediate sender's identity and administrative endpoint for the
+subject reception (<a href="#previous-node" class="auto internal xref">Section 3.2</a>).<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">The response uses a Hop Reception Report administrative record with a
+nonempty batch of positive reception assertions. A request block is
+required in both cases. Sender identification alone does not trigger
+reporting.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">A Hop Reception Report has the same reception meaning as the "reporting
+node received bundle" status assertion in <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-6.1.1" class="relref">Section 6.1.1</a></span>.
+The BPA generates that assertion at Step 2 of <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-5.6" class="relref">Section 5.6</a></span>,
+before subsequent validation.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">A Hop Reception Report asserts only that the reporting BPA received the
+identified bundle or fragment. It does not assert that the bundle passed
+validation, security verification, or ingress-policy checks. It does not
+assert acceptance for forwarding or delivery. The receiving BPA can later
+reject or delete the bundle without contradicting the reception assertion.
+The report does not establish completion of all reception processing,
+durable storage, or continued retention. It implies
+no commitment to retain, forward, or deliver the bundle and does not
+transfer custody or responsibility for the bundle between nodes.<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-8">Hop Reception Reports provide explicit BPA reception assertions,
+independent of the convergence layer. Local policy determines how a
+requesting BPA uses this signal. That policy is outside this document's
+scope.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-9">"One hop" describes the reception event and the requesting neighbor.
+Nodes that support this specification remove the request block before
+onward forwarding. The required block processing control flags cause
+other nodes to discard it. Addressing the report to the requesting
+neighbor does not restrict its route to the immediate link. Local policy
+determines the return route.<a href="#section-1-9" class="pilcrow">¶</a></p>
 <div id="open-issues">
 <section id="section-1.1">
         <h3 id="name-open-issues">
@@ -1357,7 +1381,7 @@ link. Return routing is a matter of local policy.<a href="#section-1-5" class="p
           <dd style="margin-left: 1.5em" id="section-1.1-3.2">
             <p id="section-1.1-3.2.1">This revision includes a reception time in an entry if and only if the
 subject bundle's "Report status time" flag is set. A future revision
-could allow the forwarding node to request timestamps independently of
+could allow the requesting node to request timestamps independently of
 that source-controlled flag. No such request flag is defined here.<a href="#section-1.1-3.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
@@ -1386,19 +1410,68 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <p id="section-2-2.4.1">Convergence Layer Adapter, as defined in <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>]</span>.<a href="#section-2-2.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.5">Forwarding node:</dt>
+<dt id="section-2-2.5">Requesting node:</dt>
         <dd style="margin-left: 1.5em" id="section-2-2.6">
-          <p id="section-2-2.6.1">The node that inserts a Hop Reception Report Request block into a bundle
-prior to forwarding it.<a href="#section-2-2.6.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.6.1">The immediate sending BPA that inserts a Hop Reception Report Request
+block before sending the subject bundle to a neighbor. This can be a
+transit-forwarding node or the bundle source on initial transmission.<a href="#section-2-2.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-2.7">Receiving node:</dt>
         <dd style="margin-left: 1.5em" id="section-2-2.8">
-          <p id="section-2-2.8.1">The node to which the forwarding node forwards the bundle, and which
+          <p id="section-2-2.8.1">The node that receives the subject bundle from the requesting node and
 processes the Hop Reception Report Request block.<a href="#section-2-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-2.9">Subject bundle:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.10">
+          <p id="section-2-2.10.1">The bundle or fragment whose reception is reported.<a href="#section-2-2.10.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-2.11">Carrier bundle:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.12">
+          <p id="section-2-2.12.1">The bundle whose payload contains a Hop Reception Report administrative
+record.<a href="#section-2-2.12.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-2.13">EID:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.14">
+          <p id="section-2-2.14.1">Endpoint ID, as defined in <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>]</span>.<a href="#section-2-2.14.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
+<div id="eid-comparison">
+<section id="section-2.1">
+        <h3 id="name-eid-comparison">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-eid-comparison" class="section-name selfRef">EID Comparison</a>
+        </h3>
+<p id="section-2.1-1">Nodes <span class="bcp14">MUST</span> compare EIDs by their decoded values, using the applicable
+URI-scheme matching rules, not by their CBOR encoding bytes. This rule
+applies to:<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-2.1-2.1">
+            <p id="section-2.1-2.1.1">Subject-source EIDs in bundle identifiers.<a href="#section-2.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-2.1-2.2">
+            <p id="section-2.1-2.2.1">Requester EIDs used to group entries into batches.<a href="#section-2.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-2.1-2.3">
+            <p id="section-2.1-2.3.1">Reporting-node and peer-identity correlation.<a href="#section-2.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-2.1-3">Equivalent two-element and three-element <code>ipn</code> scheme-specific encodings
+<span class="bcp14">MUST</span> match
+as specified in <span>[<a href="#RFC9758" class="cite xref">RFC9758</a>], <a href="https://rfc-editor.org/rfc/rfc9758#section-6.4" class="relref">Section 6.4</a></span>. This comparison rule does not
+alter security-context rules for integrity verification or the wire
+format of any identifier.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
+<p id="section-2.1-4">Distinct EIDs <span class="bcp14">MUST NOT</span> be treated as equivalent merely because they
+appear to identify services on the same node. Authentication or
+trusted configuration <span class="bcp14">MUST</span> establish any association between different
+node identities used for peer or reporter correlation. That association
+does not make distinct subject-source EIDs or report destinations
+interchangeable.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="block">
@@ -1413,27 +1486,60 @@ processes the Hop Reception Report Request block.<a href="#section-2-2.8.1" clas
         </h3>
 <p id="section-3.1-1">The Hop Reception Report Request block is a BPv7 canonical block with a
 block type code of TBD1 (see <a href="#iana" class="auto internal xref">Section 9</a>).<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">The block-type-specific data of the block <span class="bcp14">SHALL</span> be a single CBOR unsigned
-integer <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> representing a flags field. No flags are defined by
-this document; the value <span class="bcp14">SHALL</span> be zero (0) when emitted, and receiving nodes
-<span class="bcp14">SHALL</span> ignore any flag bits they do not recognize.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The block-type-specific data <span class="bcp14">SHALL</span> be a single CBOR unsigned integer
+<span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> that represents a flags field. This document defines no flags.
+The sender <span class="bcp14">SHALL</span> set the value to zero (0). Receiving nodes <span class="bcp14">SHALL</span> ignore
+flag bits they do not recognize.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1-3">The block <span class="bcp14">SHALL NOT</span> appear more than once in a bundle.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="previous-node">
 <section id="section-3.2">
-        <h3 id="name-dependence-on-the-previous-">
-<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-dependence-on-the-previous-" class="section-name selfRef">Dependence on the Previous Node Block</a>
+        <h3 id="name-identification-of-the-reque">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-identification-of-the-reque" class="section-name selfRef">Identification of the Requesting Node</a>
         </h3>
-<p id="section-3.2-1">The Hop Reception Report Request block has meaning only in conjunction with
-a Previous Node block (<span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.4.1" class="relref">Section 4.4.1</a></span>), which identifies the
-node to which the reception report is to be sent. A bundle containing a Hop
-Reception Report Request block but no Previous Node block <span class="bcp14">MUST</span> be treated
-by the receiving node as if the Hop Reception Report Request block could
-not be processed (see <a href="#receiving" class="auto internal xref">Section 5.2</a>).<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">Because the Previous Node block is itself replaced at each hop, the
-addressing of the request follows the bundle's actual path without the
-forwarding node needing to place its own node ID in the request block.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">A Hop Reception Report Request block <span class="bcp14">MUST</span> be present to trigger a Hop
+Reception Report. Before honoring the request, the receiver <span class="bcp14">MUST</span> establish
+the immediate sending BPA's identity and administrative endpoint for the
+subject bundle. The following cases apply:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2-2.1">
+            <p id="section-3.2-2.1.1">When a Previous Node block (<span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.4.1" class="relref">Section 4.4.1</a></span>) is present, its
+node ID <span class="bcp14">MUST</span> identify the immediate sending BPA and <span class="bcp14">MUST</span> be consistent
+with the peer identity established through convergence-layer
+authentication or trusted configuration. A requesting node using a
+Previous Node block <span class="bcp14">MUST</span> place its own administrative endpoint ID in
+that block. The report destination is that supplied, validated endpoint.<a href="#section-3.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.2-2.2">
+            <p id="section-3.2-2.2.1">When no Previous Node block is present, the receiver <span class="bcp14">MAY</span> honor the
+request if it can establish both the sending BPA's identity and
+administrative endpoint. It uses convergence-layer peer authentication
+or trusted configuration for this association. The report destination
+is the administrative endpoint established by that association.<a href="#section-3.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.2-3">In both cases, the association <span class="bcp14">MUST</span> apply to the subject bundle's
+reception. A transport address or an unauthenticated
+advertised node ID alone is insufficient. If the required association
+cannot be established, the receiver <span class="bcp14">MUST NOT</span> generate a Hop Reception
+Report for that request. A malformed, duplicated, or inconsistent Previous
+Node block <span class="bcp14">MUST NOT</span> be treated as absent to enable fallback. The receiver
+<span class="bcp14">MUST NOT</span> honor a request if a present Previous Node block conflicts with
+the established sending-peer identity.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">The receiver <span class="bcp14">MUST NOT</span> infer the immediate sender solely from the primary
+block's source node ID. That field can identify a source several hops
+away. Although <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.2.5.2" class="relref">Section 4.2.5.2</a></span> permits other singleton
+endpoint IDs to identify a node, this mechanism requires its administrative
+endpoint so the report reaches the administrative element. For <code>ipn</code>,
+administrative endpoints use Service Number zero as specified in
+<span>[<a href="#RFC9758" class="cite xref">RFC9758</a>], <a href="https://rfc-editor.org/rfc/rfc9758#section-5.7" class="relref">Section 5.7</a></span>. Endpoint syntax alone proves neither peer
+identity nor authorization. A receiver <span class="bcp14">MUST NOT</span> substitute a destination
+by converting an arbitrary node ID without the required authenticated or
+configured association. EID comparison follows <a href="#eid-comparison" class="auto internal xref">Section 2.1</a>.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-5">This procedure adds no address field to the request block. Local policy
+still determines whether an otherwise valid request is honored
+(<a href="#receiving" class="auto internal xref">Section 5.2</a>).<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="flags">
@@ -1441,7 +1547,7 @@ forwarding node needing to place its own node ID in the request block.<a href="#
         <h3 id="name-block-processing-control-fl">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-block-processing-control-fl" class="section-name selfRef">Block Processing Control Flags</a>
         </h3>
-<p id="section-3.3-1">A forwarding node inserting the Hop Reception Report Request block <span class="bcp14">SHALL</span>
+<p id="section-3.3-1">A requesting node inserting the Hop Reception Report Request block <span class="bcp14">SHALL</span>
 set the block processing control flags (<span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.2.4" class="relref">Section 4.2.4</a></span>) as
 follows. These flags are distinct from the zero-valued flags field in the
 block-type-specific data.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
@@ -1485,35 +1591,50 @@ code TBD2 (see <a href="#iana" class="auto internal xref">Section 9</a>), distin
 </div>
 <p id="section-4-3">The record content <span class="bcp14">SHALL</span> be an array containing at least one reception
 entry. A batch <span class="bcp14">MAY</span> contain any positive number of entries within
-applicable bundle-size and implementation limits; this specification
-imposes no fixed protocol maximum and does not require unbounded
-resources. Each entry positively asserts reception of the identified
-bundle or fragment. Omission of an identifier conveys no negative
-assertion. The record has no status indicators, ordinary Bundle Status
-Report status arrays, or reason codes, and conveys no custody, refusal,
+applicable bundle-size and implementation limits. This specification sets
+no fixed protocol maximum and does not require unlimited resources. Each
+entry positively asserts reception of the identified bundle or fragment.
+Omission of an identifier conveys no negative assertion. The record has no status indicators, ordinary Bundle Status
+Report status arrays, or reason codes. It conveys no custody, refusal,
 forwarding, delivery, or deletion status.<a href="#section-4-3" class="pilcrow">¶</a></p>
 <p id="section-4-4">Each entry <span class="bcp14">SHALL</span> be an array containing a bundle identifier and, when
-required below, a reception time. The identifier <span class="bcp14">SHALL</span> be an array of two
-items for a non-fragment: its source node ID and creation timestamp. For a
-fragment it <span class="bcp14">SHALL</span> instead contain four items: the source node ID,
-creation timestamp, fragment offset, and fragment payload length, in that
-order. Fragment offset and payload length <span class="bcp14">MUST</span> appear together, and <span class="bcp14">MUST</span>
+required below, a reception time. For a non-fragment, the identifier <span class="bcp14">SHALL</span>
+be a two-item array: source node ID, then creation timestamp. For a
+fragment, it <span class="bcp14">SHALL</span> be a four-item array, in this order:<a href="#section-4-4" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4-5">
+<li id="section-4-5.1">
+          <p id="section-4-5.1.1">Source node ID.<a href="#section-4-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-4-5.2">
+          <p id="section-4-5.2.1">Creation timestamp.<a href="#section-4-5.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-4-5.3">
+          <p id="section-4-5.3.1">Fragment offset.<a href="#section-4-5.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-4-5.4">
+          <p id="section-4-5.4.1">Fragment payload length.<a href="#section-4-5.4.1" class="pilcrow">¶</a></p>
+</li>
+      </ol>
+<p id="section-4-6">Fragment offset and payload length <span class="bcp14">MUST</span> appear together, and <span class="bcp14">MUST</span>
 appear if and only if the subject bundle is a fragment. Offset zero does
 not mean "not a fragment". The length is the length in bytes of the
-received fragment's payload, not the total ADU length.<a href="#section-4-4" class="pilcrow">¶</a></p>
-<p id="section-4-5">Source node IDs <span class="bcp14">SHALL</span> use the applicable BP EID encoding of <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.2.5" class="relref">Section 4.2.5</a></span> and the referenced URI scheme specification; the null
+received fragment's payload, not the total ADU length.<a href="#section-4-6" class="pilcrow">¶</a></p>
+<p id="section-4-7">Source node IDs <span class="bcp14">SHALL</span> use the applicable BP EID encoding of <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.2.5" class="relref">Section 4.2.5</a></span> and the referenced URI scheme specification. The null
 endpoint ID is not permitted. Creation timestamps <span class="bcp14">SHALL</span> use <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.2.7" class="relref">Section 4.2.7</a></span>. Fragment offsets and payload lengths <span class="bcp14">SHALL</span> be CBOR
 unsigned integers. Reception times <span class="bcp14">SHALL</span> be DTN times as defined in
-<span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.2.6" class="relref">Section 4.2.6</a></span>, including its zero value for unknown time.<a href="#section-4-5" class="pilcrow">¶</a></p>
-<p id="section-4-6">An entry <span class="bcp14">MUST</span> include a reception time if the subject bundle's "Report
-status time" bundle processing control flag is set, and <span class="bcp14">MUST</span> omit it
-otherwise. This is the reception event's time as reported by the receiving
-node's local clock, not the time of batch creation or transmission. A
+<span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.2.6" class="relref">Section 4.2.6</a></span>, including its zero value for unknown time.<a href="#section-4-7" class="pilcrow">¶</a></p>
+<p id="section-4-8">An entry <span class="bcp14">MUST</span> include a reception time if the subject bundle's "Report
+status time" bundle processing control flag is set. Otherwise, it <span class="bcp14">MUST</span>
+omit the reception time. This is the reception event's time as reported
+by the receiving node's local clock, not the time of batch creation or
+transmission. A
 batch <span class="bcp14">MAY</span> mix entries with and without reception times, and <span class="bcp14">MAY</span> contain
 different source node IDs and creation timestamps. All entries <span class="bcp14">MUST</span>
-concern requests from the same validated previous-hop node, which is the
-recipient of the carrier bundle. The reporting and requesting node IDs
-are carried by that bundle, not repeated in each entry.<a href="#section-4-6" class="pilcrow">¶</a></p>
+have the same resolved requesting administrative endpoint ID. Resolve this
+ID as specified in <a href="#previous-node" class="auto internal xref">Section 3.2</a> and compare it as specified in
+<a href="#eid-comparison" class="auto internal xref">Section 2.1</a>. That endpoint is the destination of the carrier bundle.
+The reporting and requesting node IDs are carried by that bundle, not
+repeated in each entry.<a href="#section-4-8" class="pilcrow">¶</a></p>
 <div id="cddl">
 <section id="section-4.1">
         <h3 id="name-cddl">
@@ -1521,11 +1642,11 @@ are carried by that bundle, not repeated in each entry.<a href="#section-4-6" cl
         </h3>
 <p id="section-4.1-1">The following CDDL <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> defines the record structure. TBD2 is a
 symbolic placeholder for the single record type code to be allocated by
-IANA. Its temporary definition as <code>uint</code> makes the CDDL usable before
-allocation; it does not permit arbitrary record type codes on the wire.
-The EID rule describes the common BP EID structure; its scheme-specific
-part <span class="bcp14">MUST</span> additionally conform to the applicable URI scheme encoding,
-and the EID <span class="bcp14">MUST</span> identify a non-anonymous source node. The relationship
+IANA. The temporary <code>uint</code> definition lets tools use the CDDL before
+allocation. It does not permit arbitrary record type codes on the wire.
+The EID rule describes the common BP EID structure. Its scheme-specific
+part <span class="bcp14">MUST</span> conform to the applicable URI scheme encoding. The EID <span class="bcp14">MUST</span>
+identify a non-anonymous source node. The relationship
 to the subject bundle's fragment and status-time flags is specified in
 <a href="#record" class="auto internal xref">Section 4</a> and cannot be checked from the record structure alone.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-4.1-2">
@@ -1559,29 +1680,34 @@ fragment-payload-length = uint
       </h2>
 <div id="forwarding">
 <section id="section-5.1">
-        <h3 id="name-forwarding-node">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-forwarding-node" class="section-name selfRef">Forwarding Node</a>
+        <h3 id="name-requesting-node">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-requesting-node" class="section-name selfRef">Requesting Node</a>
         </h3>
-<p id="section-5.1-1">A node <span class="bcp14">MAY</span> insert a Hop Reception Report Request block into a bundle when
-it forwards the bundle to a neighboring node. The decision to do so is a
-matter of local policy, which <span class="bcp14">MAY</span> take into account the bundle's
-characteristics, the identity of the next hop, and the convergence layer in
-use.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1-2">When inserting the block, the forwarding node <span class="bcp14">MUST</span> also ensure the bundle
-contains a Previous Node block whose node ID identifies the forwarding node,
-as required by <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.4.1" class="relref">Section 4.4.1</a></span>. A node <span class="bcp14">MUST NOT</span> insert a Hop
-Reception Report Request block into a bundle that does not, or will not,
-contain a Previous Node block.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
-<p id="section-5.1-3">A node <span class="bcp14">MUST NOT</span> insert a Hop Reception Report Request block into a bundle
+<p id="section-5.1-1">A node <span class="bcp14">MAY</span> insert a Hop Reception Report Request block when forwarding a
+bundle to a neighboring node. The bundle source <span class="bcp14">MAY</span> also insert a request
+on initial transmission, subject to the exclusions below. Local policy
+controls this decision. It <span class="bcp14">MAY</span> consider the bundle's characteristics,
+the next hop's identity, and the convergence layer in use.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">If the requesting node includes a Previous Node block, it <span class="bcp14">MUST</span> place its
+own administrative endpoint ID in that block, as specified in
+<a href="#previous-node" class="auto internal xref">Section 3.2</a>. Absence of a Previous Node block does not prohibit
+inserting a request. The bundle source <span class="bcp14">MUST NOT</span> insert a Previous Node
+block contrary to <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.4.1" class="relref">Section 4.4.1</a></span>. On initial transmission, the
+first receiving BPA can honor a request without that block through the
+authenticated or configured peer-association fallback in <a href="#previous-node" class="auto internal xref">Section 3.2</a>.
+This does not change RFC 9171's Previous Node processing requirements.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.1-3">A sender cannot assume that the receiver has sufficient identity
+information or will honor the request. Absence of a report remains
+inconclusive.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.1-4">A node <span class="bcp14">MUST NOT</span> insert a Hop Reception Report Request block into a bundle
 whose payload is an administrative record, or whose source node ID is the
-null endpoint ID. This parallels the restrictions on status report request
-flags in <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.2.3" class="relref">Section 4.2.3</a></span> and prevents reception reports from
-themselves generating reception reports.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
-<p id="section-5.1-4">If a bundle received by the node already contains a Hop Reception Report
-Request block that was not removed (for example, because the node received
-the bundle from a node that does not implement this specification and did
-not honor the "discard block" flag), the node <span class="bcp14">MUST</span> remove it before
-inserting its own.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
+null endpoint ID. These exclusions match the status report request
+restrictions in <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-4.2.3" class="relref">Section 4.2.3</a></span>. They prevent reports from
+triggering further reception reports.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
+<p id="section-5.1-5">If a received bundle still contains a Hop Reception Report Request block,
+the node <span class="bcp14">MUST</span> remove that block before inserting its own. Removal or
+replacement of protected hop-specific blocks <span class="bcp14">MUST</span> follow the security
+processing in <a href="#request-security" class="auto internal xref">Section 8.2</a>.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="receiving">
@@ -1589,11 +1715,10 @@ inserting its own.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
         <h3 id="name-receiving-node">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-receiving-node" class="section-name selfRef">Receiving Node</a>
         </h3>
-<p id="section-5.2-1">Upon receiving a bundle containing a Hop Reception Report Request block,
-a node that implements this specification <span class="bcp14">SHALL</span> associate the request with
-the reception event at Step 2 of <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-5.6" class="relref">Section 5.6</a></span>, at which a
-source-requested reception status report would be generated. The node
-<span class="bcp14">MUST</span> check the following before honoring the request:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-1">A node that implements this specification <span class="bcp14">SHALL</span> associate each received
+request with the reception event at Step 2 of <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-5.6" class="relref">Section 5.6</a></span>.
+This is the event that a source-requested reception status report would
+report. The node <span class="bcp14">MUST</span> check the following before honoring the request:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.2-2">
 <li id="section-5.2-2.1">
             <p id="section-5.2-2.1.1">The bundle contains exactly one Hop Reception Report Request block,
@@ -1609,44 +1734,89 @@ Report in response to a Hop Reception Report, even if a request block
 is present.<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.3">
-            <p id="section-5.2-2.3.1">The bundle contains exactly one well-formed Previous Node block with a
-valid node ID.<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-2.3.1">The requesting identity and administrative endpoint are established
+under <a href="#previous-node" class="auto internal xref">Section 3.2</a> through one of two cases:<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-2.3.2.1">
+                <p id="section-5.2-2.3.2.1.1">Exactly one valid Previous Node block identifies the requesting
+administrative endpoint and is consistent with the established
+sending-peer identity.<a href="#section-5.2-2.3.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.2-2.3.2.2">
+                <p id="section-5.2-2.3.2.2.1">No Previous Node block is present, and convergence-layer peer
+authentication or trusted configuration establishes both the
+immediate sending BPA's identity and its administrative endpoint for
+this reception.<a href="#section-5.2-2.3.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+<p id="section-5.2-2.3.3">
+A malformed, duplicated, or inconsistent Previous Node block does not
+qualify for the second case. EID comparisons and associations with the
+actual sending peer <span class="bcp14">MUST</span> follow <a href="#eid-comparison" class="auto internal xref">Section 2.1</a> and <a href="#previous-node" class="auto internal xref">Section 3.2</a>.<a href="#section-5.2-2.3.3" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.4">
-            <p id="section-5.2-2.4.1">The Previous Node ID identifies the actual convergence-layer peer from
-which this bundle was received. The node <span class="bcp14">MUST</span> establish this
-correspondence through peer authentication or trusted configuration;
-absent that association, it <span class="bcp14">MUST NOT</span> honor the request (<a href="#security" class="auto internal xref">Section 8</a>).<a href="#section-5.2-2.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-2.5">
-            <p id="section-5.2-2.5.1">The subject bundle's identifier and status-time flag can be determined
-in accordance with <a href="#record" class="auto internal xref">Section 4</a>.<a href="#section-5.2-2.5.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-2.4.1">The node can determine the subject bundle's identifier and status-time
+flag as specified in <a href="#record" class="auto internal xref">Section 4</a>.<a href="#section-5.2-2.4.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-5.2-3">These are request validity and eligibility checks, not an assertion that
-all subsequent reception validation has succeeded. The node <span class="bcp14">MUST</span> capture
-the requesting node ID, the subject bundle or fragment identity, the
-status-time flag, and, when required, the reception event's time before
-reassembly or replacement or removal of hop-specific blocks. Deferring
-request checks or batch construction <span class="bcp14">MUST NOT</span> change the event being
-reported or replace its timestamp with the time of those later actions.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
-<p id="section-5.2-4">Local policy <span class="bcp14">MAY</span> permit honoring an otherwise valid request; it cannot
-make an invalid request valid. For each request it honors, the node <span class="bcp14">SHALL</span>
-create a pending reception entry as specified in <a href="#record" class="auto internal xref">Section 4</a>, for
-aggregation and reporting according to <a href="#batching" class="auto internal xref">Section 5.3</a>. It <span class="bcp14">MUST NOT</span> delay
+<p id="section-5.2-3">These checks establish request validity and eligibility. They do not
+assert that all later reception validation has succeeded.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.2-4">The node <span class="bcp14">MUST</span> capture the resolved requesting administrative endpoint and
+its association with the immediate sender before any of these events:<a href="#section-5.2-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-5.1">
+            <p id="section-5.2-5.1.1">Reception context is discarded.<a href="#section-5.2-5.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-5.2">
+            <p id="section-5.2-5.2.1">The CLA session changes.<a href="#section-5.2-5.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-5.3">
+            <p id="section-5.2-5.3.1">Hop-specific blocks are removed or replaced.<a href="#section-5.2-5.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-5.4">
+            <p id="section-5.2-5.4.1">The bundle is forwarded or reassembled.<a href="#section-5.2-5.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.2-6">Later session state <span class="bcp14">MUST NOT</span> redirect a pending report. Before reassembly
+or changes to hop-specific blocks, the node <span class="bcp14">MUST</span> also capture:<a href="#section-5.2-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-7.1">
+            <p id="section-5.2-7.1.1">The subject bundle or fragment identity.<a href="#section-5.2-7.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-7.2">
+            <p id="section-5.2-7.2.1">The status-time flag.<a href="#section-5.2-7.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-7.3">
+            <p id="section-5.2-7.3.1">The reception event's time, when required.<a href="#section-5.2-7.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.2-8">The node <span class="bcp14">MUST</span> retain the local elapsed-time basis for the aggregation
+deadline, measured from reception (<a href="#batching" class="auto internal xref">Section 5.3</a>). Delayed request checks
+or batch construction <span class="bcp14">MUST NOT</span> change the reported event or replace its
+timestamp with the time of those later actions.<a href="#section-5.2-8" class="pilcrow">¶</a></p>
+<p id="section-5.2-9">Local policy <span class="bcp14">MAY</span> permit the node to honor an otherwise valid request. It
+cannot make an invalid request valid. For each honored request, the node
+<span class="bcp14">SHALL</span> create a pending reception entry as specified in <a href="#record" class="auto internal xref">Section 4</a>.
+Batching and reporting follow <a href="#batching" class="auto internal xref">Section 5.3</a>. It <span class="bcp14">MUST NOT</span> delay
 processing or forwarding of the subject bundle while waiting to fill a
-batch.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
-<p id="section-5.2-5">If a request is invalid, the node <span class="bcp14">MUST NOT</span> create a reception entry for
+batch.<a href="#section-5.2-9" class="pilcrow">¶</a></p>
+<p id="section-5.2-10">If a request is invalid, the node <span class="bcp14">MUST NOT</span> create a reception entry for
 it. The node <span class="bcp14">SHALL</span> treat the request block as one that cannot be
 processed, subject to the malformed-block and unprocessable-block rules
-of <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-5.6" class="relref">Section 5.6</a></span>. A policy decision to decline an otherwise
-valid request does not itself invalidate or delete the subject bundle.<a href="#section-5.2-5" class="pilcrow">¶</a></p>
-<p id="section-5.2-6">Whether the request is honored, declined, or invalid, a supporting node
-<span class="bcp14">MUST</span> remove all received Hop Reception Report Request blocks before
-onward forwarding, regardless of their "Discard block if it can't be
-processed" flags. The node <span class="bcp14">MAY</span> insert its own new request as described
-in <a href="#forwarding" class="auto internal xref">Section 5.1</a>. Ordinary source-requested status reporting remains
-independent (<a href="#status-reports" class="auto internal xref">Section 6.1</a>).<a href="#section-5.2-6" class="pilcrow">¶</a></p>
+of <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-5.6" class="relref">Section 5.6</a></span>. The node cannot honor a request
+without the required sender association or with a conflicting Previous
+Node block. Neither condition introduces a new subject-bundle deletion
+rule.
+A policy decision to decline an otherwise valid request does not itself
+invalidate or delete the subject bundle.<a href="#section-5.2-10" class="pilcrow">¶</a></p>
+<p id="section-5.2-11">A node that supports this specification <span class="bcp14">MUST</span> remove all received request
+blocks before onward forwarding. This applies to honored, declined, and
+invalid requests, regardless of the "Discard block if it can't be
+processed" flags. Applicable security processing <span class="bcp14">MUST</span> precede removal or
+replacement of protected blocks, as specified in <a href="#request-security" class="auto internal xref">Section 8.2</a>.
+The node <span class="bcp14">MAY</span> insert its own new request as described in <a href="#forwarding" class="auto internal xref">Section 5.1</a>.
+Ordinary source-requested status reporting remains independent
+(<a href="#status-reports" class="auto internal xref">Section 6.1</a>).<a href="#section-5.2-11" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="batching">
@@ -1654,38 +1824,68 @@ independent (<a href="#status-reports" class="auto internal xref">Section 6.1</a
         <h3 id="name-batching-and-scheduling">
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-batching-and-scheduling" class="section-name selfRef">Batching and Scheduling</a>
         </h3>
-<p id="section-5.3-1">A reporting node <span class="bcp14">MUST</span> batch only pending entries with the same validated
-recipient node ID and compatible security treatment. Compatibility means
-that the carrier's authentication, integrity, confidentiality, and
-security-policy context satisfy the requirements for every entry;
-batching <span class="bcp14">MUST NOT</span> weaken protection required for any entry. Different
+<p id="section-5.3-1">A reporting node <span class="bcp14">MUST</span> batch only pending entries that meet both conditions:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-2.1">
+            <p id="section-5.3-2.1.1">They have the same resolved requesting administrative endpoint ID
+(<a href="#previous-node" class="auto internal xref">Section 3.2</a>), compared as specified in <a href="#eid-comparison" class="auto internal xref">Section 2.1</a>.<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-2.2">
+            <p id="section-5.3-2.2.1">They have compatible security treatment.<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-3">Entries resolved using a Previous Node block and entries resolved using
+the fallback <span class="bcp14">MAY</span> share a batch when both conditions hold. The carrier's
+authentication, integrity, confidentiality, and security-policy context
+must satisfy each entry's requirements. Batching <span class="bcp14">MUST NOT</span> weaken required
+protection for any entry. Different
 subject source EIDs and creation timestamps do not prevent batching.
-Single-entry reports are permitted.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<p id="section-5.3-2">Implementations <span class="bcp14">MUST</span> provide configurable finite bounds on pending
-reporting state, batch size (entry count and encoded size), and maximum
-aggregation delay. Size limits <span class="bcp14">MUST</span> account for the carrier bundle and
+Single-entry reports are permitted.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-4">Implementations <span class="bcp14">MUST</span> provide configurable, finite limits for:<a href="#section-5.3-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-5.1">
+            <p id="section-5.3-5.1.1">Pending reporting state.<a href="#section-5.3-5.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-5.2">
+            <p id="section-5.3-5.2.1">Batch size, by entry count and encoded size.<a href="#section-5.3-5.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-5.3">
+            <p id="section-5.3-5.3.1">Maximum aggregation delay.<a href="#section-5.3-5.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-6">Size limits <span class="bcp14">MUST</span> account for the carrier bundle and
 its security overhead within applicable bundle-size limits. These are
-local resource limits, not fixed protocol maxima. The aggregation delay
-for an entry begins when the pending entry is created; adding entries
-<span class="bcp14">MUST NOT</span> postpone an older entry's deadline.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
-<p id="section-5.3-3">Unless pending state is discarded under the resource policy below, a node
-<span class="bcp14">MUST</span> flush pending entries into one or more report carrier bundles when
-an applicable size or count threshold is reached, when the maximum
-aggregation delay is reached, or when an appropriate return-contact
-opportunity occurs. A flush ends aggregation for those entries and makes
-the resulting reports available to the local transmission scheduler.
-Expiration of the aggregation delay does not guarantee immediate
-transmission over an unavailable contact. A node <span class="bcp14">MAY</span> flush earlier,
-including immediately for a single entry.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
-<p id="section-5.3-4">Under resource pressure, local policy <span class="bcp14">MAY</span> decline new requests or discard
+local resource limits, not fixed protocol maxima.<a href="#section-5.3-6" class="pilcrow">¶</a></p>
+<p id="section-5.3-7">The node <span class="bcp14">MUST</span> measure each entry's maximum aggregation delay from the
+reception event in <a href="#receiving" class="auto internal xref">Section 5.2</a>, using local elapsed time. An accurate
+DTN clock is not required. Later creation of pending state or addition of
+entries <span class="bcp14">MUST NOT</span> extend that deadline.<a href="#section-5.3-7" class="pilcrow">¶</a></p>
+<p id="section-5.3-8">A flush ends aggregation for selected entries and puts them in one or
+more report carrier bundles. It makes those reports available to the
+local transmission scheduler.<a href="#section-5.3-8" class="pilcrow">¶</a></p>
+<p id="section-5.3-9">Unless the resource policy below discards the pending state, a node <span class="bcp14">MUST</span>
+flush entries when an applicable size threshold, count threshold, or
+maximum aggregation delay is reached. If the node honors an eligible
+request at or after its aggregation deadline, it <span class="bcp14">MUST</span> flush the entry
+without further aggregation delay. The same resource policy applies.
+Reaching the deadline does not guarantee immediate transmission. An
+unavailable contact can still delay transmission.<a href="#section-5.3-9" class="pilcrow">¶</a></p>
+<p id="section-5.3-10">A node <span class="bcp14">MAY</span> flush earlier under local scheduling policy. For example, it
+can flush a single entry immediately or use a return contact before it
+ends.
+Batching over a continuously available return link is permitted. Link
+availability alone does not require immediate flushing or transmission of
+every new entry. Subject-bundle processing and forwarding <span class="bcp14">MUST NOT</span> wait
+for a batch to fill.<a href="#section-5.3-10" class="pilcrow">¶</a></p>
+<p id="section-5.3-11">Under resource pressure, local policy <span class="bcp14">MAY</span> decline new requests or discard
 pending reporting state, including entries previously created for honored
 requests. Neither action changes processing of the subject bundle or
-creates a negative reception assertion. Reporting state and queued report
-bundles need not be retained without bound.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
-<p id="section-5.3-5">Batching reduces per-report bundle overhead, but increases acknowledgement
-latency and the number of reception assertions lost with one report
+creates a negative reception assertion. Nodes need not retain reporting
+state or queued report bundles without limit.<a href="#section-5.3-11" class="pilcrow">¶</a></p>
+<p id="section-5.3-12">Batching reduces the bundle overhead per entry. However, it increases
+acknowledgement delay and the number of assertions lost with one report
 bundle. Report lifetime, scheduling, routing, and retry policy are local
-matters. Report delivery is not guaranteed.<a href="#section-5.3-5" class="pilcrow">¶</a></p>
+matters. Report delivery is not guaranteed.<a href="#section-5.3-12" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="carrier">
@@ -1693,16 +1893,18 @@ matters. Report delivery is not guaranteed.<a href="#section-5.3-5" class="pilcr
         <h3 id="name-carrier-bundle-construction">
 <a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-carrier-bundle-construction" class="section-name selfRef">Carrier Bundle Construction</a>
         </h3>
-<p id="section-5.4-1">For each batch to be sent, the administrative element <span class="bcp14">SHALL</span> construct one
-Hop Reception Report administrative record and request transmission of a
-carrier bundle as in <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-6.2" class="relref">Section 6.2</a></span>. The carrier's payload <span class="bcp14">SHALL</span>
+<p id="section-5.4-1">For each outgoing batch, the administrative element <span class="bcp14">SHALL</span> construct one
+Hop Reception Report administrative record and request its transmission
+in a carrier bundle (<span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-6.2" class="relref">Section 6.2</a></span>). The carrier's payload <span class="bcp14">SHALL</span>
 contain exactly that one record, including its two-element envelope and
-nonempty batch. The carrier bundle's source node ID <span class="bcp14">MUST</span> identify the
-reporting node, and its destination <span class="bcp14">MUST</span> be the validated requesting node
-ID shared by all entries. Those identities <span class="bcp14">MUST NOT</span> be added to each
+nonempty batch. The carrier's source node ID <span class="bcp14">MUST</span> identify the reporting
+node. Its destination <span class="bcp14">MUST</span> be the resolved requesting administrative
+endpoint ID for all entries. This is the ID determined by
+<a href="#previous-node" class="auto internal xref">Section 3.2</a> and captured under <a href="#receiving" class="auto internal xref">Section 5.2</a>. Endpoint comparison
+follows <a href="#eid-comparison" class="auto internal xref">Section 2.1</a>. Those identities <span class="bcp14">MUST NOT</span> be added to each
 entry.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
 <p id="section-5.4-2">The carrier <span class="bcp14">MUST</span> have the "ADU is an administrative record" bundle
-processing control flag set and <span class="bcp14">MUST</span> comply with the administrative-bundle
+processing control flag set. It <span class="bcp14">MUST</span> comply with the administrative-bundle
 restrictions of <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>]</span>. In particular, all status report request
 flags <span class="bcp14">MUST</span> be zero (Section 4.2.3), and the "Transmit status report if
 block can't be processed" flag <span class="bcp14">MUST</span> be zero in every canonical block
@@ -1717,35 +1919,51 @@ does not restrict the return route to a single link.<a href="#section-5.4-2" cla
 <a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-report-recipient-processing" class="section-name selfRef">Report Recipient Processing</a>
         </h3>
 <p id="section-5.5-1">The receiving administrative element <span class="bcp14">MUST</span> validate the complete Hop
-Reception Report record before applying any entry. This includes the
-two-element envelope and supported record type, a nonempty batch, every
-entry's structure and field encodings, and the paired fragment fields.
-An empty batch, incomplete fragment identity, or malformed entry
-invalidates the entire record; a valid prefix <span class="bcp14">MUST NOT</span> be applied.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
-<p id="section-5.5-2">As required by <span>[<a href="#RFC9713" class="cite xref">RFC9713</a>], <a href="https://rfc-editor.org/rfc/rfc9713#section-2" class="relref">Section 2</a></span>, a not-well-formed administrative
-record ADU or a record type that the element cannot process <span class="bcp14">SHALL</span> be
-ignored. Records that violate this specification's format <span class="bcp14">MUST</span> likewise
-be ignored. This does not undo delivery of the carrier bundle or change
-its BPA processing. Implementations <span class="bcp14">MAY</span> impose resource limits when
-validating records, but <span class="bcp14">MUST NOT</span> partially apply a record they could not
-validate completely.<a href="#section-5.5-2" class="pilcrow">¶</a></p>
-<p id="section-5.5-3">The recipient <span class="bcp14">MUST</span> correlate each entry with locally tracked
-transmissions of the identified bundle or fragment to the reporting
-neighbor identified by the carrier's source node ID. Before using a
-report for consequential retention or retransmission decisions, the
-recipient <span class="bcp14">MUST</span> establish the reporting node's identity and the integrity
-of the reported entries as described in <a href="#security" class="auto internal xref">Section 8</a>. A bundle source
-field alone is not authentication.<a href="#section-5.5-3" class="pilcrow">¶</a></p>
-<p id="section-5.5-4">Duplicate assertions, within or across reports, <span class="bcp14">MUST</span> be processed
-idempotently. Unknown identifiers <span class="bcp14">MUST NOT</span> acknowledge other bundles or
-fragments; the recipient <span class="bcp14">MAY</span> ignore such entries without invalidating
-otherwise useful entries in the validated record. Where locally tracked
-subject information is available, an entry inconsistent with that
-subject's fragment identity or required timestamp presence <span class="bcp14">MUST NOT</span> be
-used to acknowledge it. Identifiers name bundles or fragments, not
-individual retransmission attempts: a delayed or replayed assertion
-cannot establish which attempt was received, or that the reporting node
-still retains the bundle.<a href="#section-5.5-4" class="pilcrow">¶</a></p>
+Reception Report record before applying any entry. Validation includes:<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.5-2.1">
+            <p id="section-5.5-2.1.1">The two-element envelope and supported record type.<a href="#section-5.5-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.5-2.2">
+            <p id="section-5.5-2.2.1">A nonempty batch.<a href="#section-5.5-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.5-2.3">
+            <p id="section-5.5-2.3.1">Each entry's structure and field encodings.<a href="#section-5.5-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.5-2.4">
+            <p id="section-5.5-2.4.1">The paired fragment fields.<a href="#section-5.5-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.5-3">An empty batch, incomplete fragment identity, or malformed entry
+invalidates the entire record. A valid prefix <span class="bcp14">MUST NOT</span> be applied.<a href="#section-5.5-3" class="pilcrow">¶</a></p>
+<p id="section-5.5-4">The administrative element <span class="bcp14">SHALL</span> ignore malformed administrative record
+ADUs and record types it cannot process, as required by <span>[<a href="#RFC9713" class="cite xref">RFC9713</a>], <a href="https://rfc-editor.org/rfc/rfc9713#section-2" class="relref">Section 2</a></span>. It <span class="bcp14">MUST</span> also ignore records that violate this specification's
+format. This does not undo delivery of the carrier bundle or change
+its BPA processing. Implementations <span class="bcp14">MAY</span> limit the resources used for
+validation. They <span class="bcp14">MUST NOT</span> partially apply a record they could not validate
+completely.<a href="#section-5.5-4" class="pilcrow">¶</a></p>
+<p id="section-5.5-5">Ignoring an unsupported record type is compatibility behavior, not
+permission to report to an uncertain destination. A sender of a report
+<span class="bcp14">MUST</span> still establish its recipient under <a href="#previous-node" class="auto internal xref">Section 3.2</a>.<a href="#section-5.5-5" class="pilcrow">¶</a></p>
+<p id="section-5.5-6">The recipient <span class="bcp14">MUST</span> correlate each entry with locally tracked
+transmissions of that bundle or fragment to the reporting neighbor. The
+carrier's source node ID identifies that neighbor. Subject-source EID
+matching and reporting-node and peer-identity correlation <span class="bcp14">MUST</span> follow
+<a href="#eid-comparison" class="auto internal xref">Section 2.1</a>. Before using a report to decide whether to retain or
+retransmit a bundle, the recipient <span class="bcp14">MUST</span> establish the reporting node's
+identity and the integrity of the reported entries (<a href="#security" class="auto internal xref">Section 8</a>).
+A bundle source field alone is not authentication.<a href="#section-5.5-6" class="pilcrow">¶</a></p>
+<p id="section-5.5-7">The recipient <span class="bcp14">MUST</span> process duplicate assertions idempotently, within or
+across reports. Repeated assertions must not produce additional effects.
+Unknown identifiers <span class="bcp14">MUST NOT</span> acknowledge other bundles or fragments. The
+recipient <span class="bcp14">MAY</span> ignore those entries without invalidating useful entries
+in the validated record.<a href="#section-5.5-7" class="pilcrow">¶</a></p>
+<p id="section-5.5-8">When local subject information is available, an entry <span class="bcp14">MUST NOT</span>
+acknowledge a subject if its fragment identity or timestamp presence is
+inconsistent with that information. Identifiers name bundles or fragments,
+not individual retransmission attempts. A delayed or replayed assertion
+cannot establish which attempt was received or whether the reporting node
+still retains the bundle.<a href="#section-5.5-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="fragmentation">
@@ -1753,9 +1971,9 @@ still retains the bundle.<a href="#section-5.5-4" class="pilcrow">¶</a></p>
         <h3 id="name-interaction-with-fragmentat">
 <a href="#section-5.6" class="section-number selfRef">5.6. </a><a href="#name-interaction-with-fragmentat" class="section-name selfRef">Interaction with Fragmentation</a>
         </h3>
-<p id="section-5.6-1">If a node fragments a bundle containing a Hop Reception Report Request
-block, the block is replicated in each fragment when bit 0 of its block
-processing control flags is set, as recommended in <a href="#flags" class="auto internal xref">Section 3.3</a>. Each honored
+<p id="section-5.6-1">If a node fragments a bundle with a request block, bit 0 controls
+replication of that block. When bit 0 is set, as recommended in <a href="#flags" class="auto internal xref">Section 3.3</a>,
+the node replicates the block in each fragment. Each honored
 fragment request creates an entry carrying that received fragment's
 identity, including its offset and payload length. Multiple such entries
 <span class="bcp14">MAY</span> be batched together if they meet <a href="#batching" class="auto internal xref">Section 5.3</a>, even if their fragments
@@ -1763,10 +1981,10 @@ are subsequently reassembled.<a href="#section-5.6-1" class="pilcrow">¶</a></p>
 <p id="section-5.6-2">The node <span class="bcp14">MUST</span> capture the requester and fragment identity before
 reassembly or replacement or removal of hop-specific blocks, as required
 in <a href="#receiving" class="auto internal xref">Section 5.2</a>. Reassembly <span class="bcp14">MUST NOT</span> substitute a non-fragment identifier
-for a bundle that was not received in that form. A report acknowledging
-one fragment does not acknowledge the entire original bundle, and
-fragments received from different requesting nodes cannot be combined in
-a batch addressed to just one of them.<a href="#section-5.6-2" class="pilcrow">¶</a></p>
+for a bundle that was not received in that form. A report that acknowledges
+one fragment does not acknowledge the entire original bundle. Fragments
+from different requesting nodes cannot share a batch addressed to just
+one of them.<a href="#section-5.6-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1781,23 +1999,24 @@ a batch addressed to just one of them.<a href="#section-5.6-2" class="pilcrow">�
         <h3 id="name-bundle-status-reports">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-bundle-status-reports" class="section-name selfRef">Bundle Status Reports</a>
         </h3>
-<p id="section-6.1-1">This document does not alter the Bundle Status Report format or the
-conditions under which the primary block's status report request flags
-cause reports to be generated. Ordinary source-requested reporting remains
-unchanged and independent of Hop Reception Reports. The two mechanisms
+<p id="section-6.1-1">This document does not change the Bundle Status Report format or the
+rules for reports requested by primary-block flags. Ordinary
+source-requested reporting remains unchanged and independent of Hop
+Reception Reports. The two mechanisms
 use different administrative record types, even when their destinations
-coincide. An ordinary Bundle Status Report does not satisfy a hop request,
+are the same. An ordinary Bundle Status Report does not satisfy a hop request,
 and a Hop Reception Report does not satisfy a source-requested status
 report.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <p id="section-6.1-2">The traffic concerns of <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-5.1" class="relref">Section 5.1</a></span> also apply here. Hop
-Reception Report generation <span class="bcp14">MUST</span> be disabled by default and enabled only
-when the risk of excessive traffic is deemed acceptable. Each honored
-request creates a pending entry, not necessarily a separate report
-bundle. Batching amortizes carrier overhead across entries, but requests
-still consume processing, storage, and return-path capacity. The
-forwarding node controls when it requests reports, while the reporting
-node controls whether to honor requests and how to aggregate and schedule
-reports. Return traffic need not use the immediate link.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+Reception Report generation <span class="bcp14">MUST</span> be disabled by default. It <span class="bcp14">MUST</span> be
+enabled only when the risk of excessive traffic is deemed acceptable.
+Each honored request creates a pending entry, not necessarily a separate
+report bundle.
+Batching shares carrier overhead across entries. Requests still use
+processing, storage, and return-path capacity.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1-3">The requesting node controls when it requests reports. The reporting node
+controls whether to honor requests and how to batch and schedule reports.
+Return traffic need not use the immediate link.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="custody-transfer">
@@ -1805,13 +2024,11 @@ reports. Return traffic need not use the immediate link.<a href="#section-6.1-2"
         <h3 id="name-custody-transfer">
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-custody-transfer" class="section-name selfRef">Custody Transfer</a>
         </h3>
-<p id="section-6.2-1">This document does not define custody transfer. It provides a forwarding
-node with a positive indication that the next hop's BPA has received a
-bundle, nothing more. The report does not signify that the receiving node
-has undertaken to forward, deliver, or retain the bundle, and the receiving
-node incurs no responsibility toward the bundle beyond that which it would
-have under <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>]</span> absent this block. What the forwarding node does
-with the indication is local policy.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-1">This document does not define custody transfer. A report tells the
+requesting node only that the next hop's BPA received a bundle or fragment.
+The receiving node makes no commitment to forward, deliver, or retain it.
+The request adds no responsibility beyond <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>]</span>. Local policy
+determines how the requesting node uses the report.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="convergence-layer-completion-indications">
@@ -1819,16 +2036,38 @@ with the indication is local policy.<a href="#section-6.2-1" class="pilcrow">¶<
         <h3 id="name-convergence-layer-completio">
 <a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-convergence-layer-completio" class="section-name selfRef">Convergence Layer Completion Indications</a>
         </h3>
-<p id="section-6.3-1">Convergence layer specifications typically define a "transmission success"
-indication to the BPA. Hop Reception Reports complement such indications,
-not replace them, by providing an explicit BPA-level reception assertion
+<p id="section-6.3-1">Convergence-layer specifications usually define a "transmission success"
+indication to the BPA. Hop Reception Reports supplement these indications;
+they do not replace them. They explicitly assert BPA reception,
 independent of the convergence layer in use.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
-<p id="section-6.3-2">Even when the convergence layer indicates success, absence of a report
-does not distinguish non-support from transfer failure. Silence can also
-result from policy refusal, discarded reporting state, pending
-aggregation, an unavailable return contact, receiver failure, or report
-loss. Neither silence nor omission of an entry is a negative assertion
-about reception.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+<p id="section-6.3-2">Even after convergence-layer success, a missing report does not show
+whether the receiver lacks support or the transfer failed. Other causes
+of silence include:<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.3-3.1">
+            <p id="section-6.3-3.1.1">Insufficient sender-identity information.<a href="#section-6.3-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-3.2">
+            <p id="section-6.3-3.2.1">Policy refusal.<a href="#section-6.3-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-3.3">
+            <p id="section-6.3-3.3.1">Discarded reporting state.<a href="#section-6.3-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-3.4">
+            <p id="section-6.3-3.4.1">Pending aggregation.<a href="#section-6.3-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-3.5">
+            <p id="section-6.3-3.5.1">An unavailable return contact.<a href="#section-6.3-3.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-3.6">
+            <p id="section-6.3-3.6.1">Receiver failure.<a href="#section-6.3-3.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-3.7">
+            <p id="section-6.3-3.7.1">Report loss.<a href="#section-6.3-3.7.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.3-4">Neither silence nor a missing entry is a negative assertion about
+reception.<a href="#section-6.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1839,20 +2078,28 @@ about reception.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
       </h2>
 <p id="section-7-1">These examples show the administrative-record wrapper in CBOR diagnostic
-notation, with the symbolic token <code>TBD2</code> standing for the unsigned integer
-record type code to be allocated by IANA. It is not a CBOR text string.
-Each example is a separate record carried in a bundle sourced by the
-reporting node <code>dtn://receiver/</code> and destined to the validated requester
-<code>dtn://forwarder/</code>. These two identities do not appear in the entries.
-All subject requests in each example came from that requester and have
-compatible security treatment.<a href="#section-7-1" class="pilcrow">¶</a></p>
+notation. The token <code>TBD2</code> represents the unsigned integer record type
+code that IANA will allocate. It is not a CBOR text string.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">The record-format examples use these carrier addresses:<a href="#section-7-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7-3.1">
+          <p id="section-7-3.1.1">Source: reporting node <code>dtn://receiver/</code>.<a href="#section-7-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-7-3.2">
+          <p id="section-7-3.2.1">Destination: requesting administrative endpoint <code>dtn://forwarder/</code>,
+resolved under <a href="#previous-node" class="auto internal xref">Section 3.2</a>.<a href="#section-7-3.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-7-4">These two identities do not appear in the entries. All subject requests in each
+batch came from that requesting node and have compatible security
+treatment.<a href="#section-7-4" class="pilcrow">¶</a></p>
 <div id="one-unfragmented-bundle">
 <section id="section-7.1">
         <h3 id="name-one-unfragmented-bundle">
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-one-unfragmented-bundle" class="section-name selfRef">One Unfragmented Bundle</a>
         </h3>
-<p id="section-7.1-1">The subject source is <code>dtn://source-a/</code>, its creation timestamp is
-<code>[1000, 0]</code>, and it did not request status time:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-1">The subject source is <code>dtn://source-a/</code>. The creation timestamp is
+<code>[1000, 0]</code>. The subject bundle did not request status time:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <div class="lang-cbor-diag sourcecode" id="section-7.1-2">
 <pre>
 [TBD2, [
@@ -1868,8 +2115,8 @@ compatible security treatment.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-different-sources-and-mixed" class="section-name selfRef">Different Sources and Mixed Timestamp Presence</a>
         </h3>
 <p id="section-7.2-1">These unfragmented bundles have different sources and creation
-timestamps. Only the first subject requested status time, so only its
-entry contains a reception time (3000 milliseconds after the DTN epoch):<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+timestamps. Only the first subject requested status time. Only its entry
+contains a reception time: 3000 milliseconds after the DTN epoch.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <div class="lang-cbor-diag sourcecode" id="section-7.2-2">
 <pre>
 [TBD2, [
@@ -1923,6 +2170,55 @@ invalid, including when the offset is zero:<a href="#section-7.4-3" class="pilcr
 <p id="section-7.4-5">Both invalid records <span class="bcp14">MUST</span> be ignored as described in <a href="#report-processing" class="auto internal xref">Section 5.5</a>.<a href="#section-7.4-5" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="initial-transmission-without-a-previous-node-block">
+<section id="section-7.5">
+        <h3 id="name-initial-transmission-withou">
+<a href="#section-7.5" class="section-number selfRef">7.5. </a><a href="#name-initial-transmission-withou" class="section-name selfRef">Initial Transmission without a Previous Node Block</a>
+        </h3>
+<p id="section-7.5-1">The source BPA <code>dtn://source-a/</code> initially transmits an eligible,
+unfragmented bundle with:<a href="#section-7.5-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7.5-2.1">
+            <p id="section-7.5-2.1.1">Creation timestamp <code>[1000, 0]</code>.<a href="#section-7.5-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.5-2.2">
+            <p id="section-7.5-2.2.1">A Hop Reception Report Request block.<a href="#section-7.5-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.5-2.3">
+            <p id="section-7.5-2.3.1">No Previous Node block.<a href="#section-7.5-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.5-2.4">
+            <p id="section-7.5-2.4.1">No request for status time.<a href="#section-7.5-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-7.5-3">The receiving BPA <code>dtn://receiver/</code> uses an authenticated CLA association
+or trusted configuration that applies to this transfer. It establishes
+that the immediate sender is the source BPA and that its administrative
+endpoint is <code>dtn://source-a/</code>. The primary block's source node ID alone
+does not establish this association.<a href="#section-7.5-3" class="pilcrow">¶</a></p>
+<p id="section-7.5-4">If local policy permits the request, the receiver captures the association
+and creates the entry <code>[[[1, "//source-a/"], [1000, 0]]]</code>. It can send a
+single-entry report with source <code>dtn://receiver/</code> and destination
+<code>dtn://source-a/</code>, using the wrapper shown above. It can also batch the
+entry with others for that endpoint if their security treatment is
+compatible. Without the required association, it does not honor the
+request.<a href="#section-7.5-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="conflicting-previous-node-identity">
+<section id="section-7.6">
+        <h3 id="name-conflicting-previous-node-i">
+<a href="#section-7.6" class="section-number selfRef">7.6. </a><a href="#name-conflicting-previous-node-i" class="section-name selfRef">Conflicting Previous Node Identity</a>
+        </h3>
+<p id="section-7.6-1">The established immediate sender is <code>dtn://forwarder/</code>. A Previous Node
+block names <code>dtn://other/</code>. Authentication or trusted configuration does
+not associate that identity with the sender.<a href="#section-7.6-1" class="pilcrow">¶</a></p>
+<p id="section-7.6-2">The receiver does not honor the request. It cannot ignore the conflicting
+block and use fallback to report to either endpoint. RFC 9171 handling of
+malformed or unprocessable blocks still applies. This conflict introduces
+no new subject-bundle deletion rule.<a href="#section-7.6-2" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="security">
@@ -1935,60 +2231,90 @@ invalid, including when the offset is zero:<a href="#section-7.4-3" class="pilcr
         <h3 id="name-reflection">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-reflection" class="section-name selfRef">Reflection</a>
         </h3>
-<p id="section-8.1-1">A mechanism that causes a node to send a message to a third party on
-request is a potential reflection vector: an attacker able to inject a
-bundle carrying a Hop Reception Report Request block and a Previous Node
-block naming a victim could cause the receiving node to send a report to
-the victim.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1-2">The validity condition in <a href="#receiving" class="auto internal xref">Section 5.2</a>, that the Previous Node block's node
-ID must identify the convergence-layer peer from which the bundle was
-actually received, is the primary mitigation. Over convergence layers that
-authenticate the peer node ID, such as TCPCLv4 <span>[<a href="#RFC9174" class="cite xref">RFC9174</a>]</span> with
-certificate-based node identification, that authentication can establish
-the association. Otherwise, trusted configuration (for example, a
-configured peer identity on a controlled link) <span class="bcp14">MUST</span> establish it. A node
-<span class="bcp14">MUST NOT</span> honor the request if neither method establishes the association.
-Request authentication does not waive the actual-peer association check,
-and local policy <span class="bcp14">MAY</span> decline even a valid request.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
-<p id="section-8.1-3">Addressing a report to the previous hop does not confine its route or
-reflection costs to the immediate link. Return routing is local policy,
-and authorization, rate limits, and resource bounds remain necessary even
-for authenticated requesting peers.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">Requests can be used for reflection attacks. An attacker could send a
+bundle with a request block and a Previous Node block that names a victim.
+Without sender validation, the receiver could send a report to the victim.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">The main protection is the sender association required by
+<a href="#previous-node" class="auto internal xref">Section 3.2</a> and <a href="#receiving" class="auto internal xref">Section 5.2</a>. It connects the requesting
+administrative endpoint to the BPA that supplied the subject bundle. When
+a Previous Node block is present, that association <span class="bcp14">MUST</span> be consistent
+with the block.
+When the block is absent, authenticated CLA information or trusted
+configuration can establish the association. Fallback cannot bypass a
+malformed, duplicated, or conflicting block.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">Transport-peer authentication alone does not establish which BPA and
+administrative endpoint the peer represents. TCPCLv4 peer-node
+authentication <span>[<a href="#RFC9174" class="cite xref">RFC9174</a>]</span> can help establish this association when it
+succeeds under an appropriate trust policy. A TCPCL session alone does
+not authenticate an advertised node ID. Trusted configuration can instead
+bind a controlled link or peer to a BPA and administrative endpoint.
+In either case, the association must apply to the subject bundle's
+reception, not merely to a later session.
+A transport address, unauthenticated advertised identity, or primary-block
+source node ID alone does not suffice.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-4">A node <span class="bcp14">MUST NOT</span> honor the request if the required association cannot be
+established. Administrative endpoint syntax alone proves neither peer
+identity nor authorization. EID comparisons and any association between
+different node identities follow <a href="#eid-comparison" class="auto internal xref">Section 2.1</a>. Request
+authentication does not replace the actual-sender association check.
+Knowledge of a peer's identity does not require the receiver to honor its
+requests. Local policy <span class="bcp14">MAY</span> decline even a valid request.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
+<p id="section-8.1-5">Addressing a report to the previous hop does not limit its route or
+reflection costs to the immediate link. Local policy controls return
+routing. Authorization, rate limits, and resource limits remain necessary,
+even for authenticated requesting peers.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="integrity-and-reporter-authentication">
+<div id="request-security">
 <section id="section-8.2">
         <h3 id="name-integrity-and-reporter-auth">
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-integrity-and-reporter-auth" class="section-name selfRef">Integrity and Reporter Authentication</a>
         </h3>
-<p id="section-8.2-1">The Hop Reception Report Request block and the Previous Node block are
-inserted by the forwarding node and can be integrity-protected by that
-node using a Block Integrity Block <span>[<a href="#RFC9172" class="cite xref">RFC9172</a>]</span> with a security source of
-the forwarding node. A receiving node with a security association with the
-forwarding node can thereby verify that the request was placed by that
-node. A source-applied Block Integrity Block cannot cover these blocks,
-since they did not exist at the source. Removal or replacement of
-hop-specific blocks needs to respect applicable BPSec processing rules.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<p id="section-8.2-2">Authenticating the request does not authenticate the response. A forged or
-modified report could induce premature deletion of a retained copy or
-suppression of needed retransmission. Before making consequential
-retention or retransmission decisions, the report recipient <span class="bcp14">MUST</span> establish
-the reporting node's identity and the integrity of all entries it uses,
-including their binding to that identity. Protection can use BPSec with
-an appropriate security context and trust policy covering the report
-payload and binding the carrier's source identity. Security requirements
-for all entries must be compatible before batching (<a href="#batching" class="auto internal xref">Section 5.3</a>).<a href="#section-8.2-2" class="pilcrow">¶</a></p>
-<p id="section-8.2-3">An authenticated and integrity-protected direct convergence-layer
-exchange can provide this assurance when the authenticated peer is the
-reporting node and the exchange protects the report. On a multihop return
-path, authenticating the last transport peer does not authenticate the
-original reporter or protect the entries against modification by earlier
-nodes. Such paths require protection and trust arrangements that establish
-the original reporter's identity and the integrity of its assertions;
-the carrier source field alone is insufficient. When bundle-layer
-security services are needed, they <span class="bcp14">SHALL</span> use BPSec as required by
-<span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-8" class="relref">Section 8</a></span>. Authentication establishes who made an assertion,
-not that a dishonest reporter actually received or retained the subject.<a href="#section-8.2-3" class="pilcrow">¶</a></p>
+<p id="section-8.2-1">The requesting node can use a Block Integrity Block (BIB) <span>[<a href="#RFC9172" class="cite xref">RFC9172</a>]</span> to
+protect its request block and any accompanying Previous Node block. The
+requesting node is the security source. With the appropriate security
+association and policy, the receiver can verify who inserted the request.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-2">Source-applied protection cannot cover blocks inserted later by a transit
+node. A source can protect a request that it inserts on initial
+transmission. The security-acceptor processing below applies in both cases.<a href="#section-8.2-2" class="pilcrow">¶</a></p>
+<p id="section-8.2-3">For BIB operations on the request block or accompanying Previous Node
+block, security policy <span class="bcp14">MUST</span> designate the intended next hop as security
+acceptor. The receiving node
+<span class="bcp14">MUST</span> perform the applicable security processing before removing or
+replacing the protected blocks. Following <span>[<a href="#RFC9172" class="cite xref">RFC9172</a>], <a href="https://rfc-editor.org/rfc/rfc9172#section-5.1.2" class="relref">Section 5.1.2</a></span>, the
+acceptor <span class="bcp14">MUST</span> remove operation-specific information from the BIB. This
+includes the target and corresponding security results. The acceptor <span class="bcp14">MUST</span>
+remove the BIB when no security operations remain. It <span class="bcp14">MUST NOT</span> remove
+unrelated security operations merely to remove hop-specific blocks.
+Those operations remain subject to their own security processing.
+Removal or replacement <span class="bcp14">MUST NOT</span> leave references to missing security
+targets.<a href="#section-8.2-3" class="pilcrow">¶</a></p>
+<p id="section-8.2-4">The node <span class="bcp14">MUST</span> handle verification failures under the applicable security
+policy. It <span class="bcp14">MUST NOT</span> treat failed protection as successful request
+authentication. These requirements apply existing BPSec procedures. They
+define neither a new security context nor a stronger reception assertion.<a href="#section-8.2-4" class="pilcrow">¶</a></p>
+<p id="section-8.2-5">Authentication of the request or incoming subject-bundle transfer does
+not automatically authenticate a later report, including one returned
+over another path. A forged or modified report could cause early deletion
+of a retained copy or prevent a needed retransmission.<a href="#section-8.2-5" class="pilcrow">¶</a></p>
+<p id="section-8.2-6">Before using a report to decide whether to retain or retransmit a bundle,
+the recipient <span class="bcp14">MUST</span> establish the reporter's identity and the integrity of
+all entries it uses. This includes their binding to that identity. BPSec
+can provide protection through an appropriate security context and trust
+policy. That protection covers the report payload and binds it to the
+carrier's source identity. All entries must have compatible security
+requirements before batching (<a href="#batching" class="auto internal xref">Section 5.3</a>).<a href="#section-8.2-6" class="pilcrow">¶</a></p>
+<p id="section-8.2-7">A direct convergence-layer exchange can provide this assurance if it
+authenticates the reporting peer and protects the report's integrity.
+On a multihop return path, authentication of the last transport peer does
+not authenticate the original reporter. It also does not protect entries
+against changes by earlier nodes. Such paths need protection and trust
+arrangements that establish the original reporter's identity and the
+integrity of its assertions. The carrier source field alone is not enough.
+When bundle-layer security services are needed, they <span class="bcp14">SHALL</span> use BPSec as
+required by <span>[<a href="#RFC9171" class="cite xref">RFC9171</a>], <a href="https://rfc-editor.org/rfc/rfc9171#section-8" class="relref">Section 8</a></span>. Authentication establishes who made an
+assertion. It does not prove that a dishonest reporter received or
+retained the subject.<a href="#section-8.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="replay-and-duplicates">
@@ -2001,9 +2327,9 @@ assertions idempotently and correlate them with locally tracked bundle or
 fragment identities and the reporting neighbor (<a href="#report-processing" class="auto internal xref">Section 5.5</a>).
 Neither a bundle identifier nor an optional reception time identifies an
 individual retransmission attempt. A replayed report is not evidence of a
-new reception or continued retention. Local policy needs to account for
-stale reports, bounded correlation state, and the limitations of clocks
-when deciding whether an assertion is useful. This specification adds no
+new reception or continued retention. To decide whether an
+assertion is useful, local policy needs to consider stale reports, limits
+on correlation state, and clock limitations. This specification adds no
 sequence-number or anti-replay exchange.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2016,16 +2342,15 @@ sequence-number or anti-replay exchange.<a href="#section-8.3-1" class="pilcrow"
 processing, and return-path capacity, even when peers are authenticated.
 Large received batches also consume validation and correlation resources.
 Nodes <span class="bcp14">SHOULD</span> apply per-peer rate limits and resource budgets in addition
-to the configurable limits in <a href="#batching" class="auto internal xref">Section 5.3</a>. Policy refusal and discarding
-pending state are preferable to allowing reporting to exhaust resources
-needed for subject-bundle processing. A request does not guarantee a
+to the configurable limits in <a href="#batching" class="auto internal xref">Section 5.3</a>. It is better to decline
+requests or discard pending state than to exhaust resources needed for
+subject-bundle processing. A request does not guarantee a
 report, and a refusal is not encoded as a negative entry.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
 <p id="section-8.4-2">Loss or suppression of one batched report removes multiple assertions at
-once. This correlated loss can cause bursts of unnecessary
-retransmission if local policy reacts to silence. Batch-size and delay
-limits, report scheduling, and retransmission policies should account for
-this tradeoff rather than treating each missing entry as an independent
-transfer failure.<a href="#section-8.4-2" class="pilcrow">¶</a></p>
+once. This correlated loss can cause bursts of unnecessary retransmission
+if local policy reacts to silence. Batch-size limits, delay limits,
+scheduling, and retransmission policies should account for this effect.
+A missing entry does not establish an independent transfer failure.<a href="#section-8.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="traffic-analysis">
@@ -2035,14 +2360,14 @@ transfer failure.<a href="#section-8.4-2" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-8.5-1">Reports expose bundle identifiers and, when requested, reception times.
 A batch can link traffic from different sources through a common
-forwarding and reporting relationship; its size, membership, and timing
-can reveal traffic volumes and contact patterns. Aggregation also means
+requesting and reporting node. Its size, membership, and timing can reveal
+traffic volumes and contact patterns. Aggregation also means
 that report transmission timing is not simply the reception event time.<a href="#section-8.5-1" class="pilcrow">¶</a></p>
 <p id="section-8.5-2">Convergence-layer confidentiality, such as TCPCLv4 with TLS, protects
-content on the links where it is used, but does not hide all traffic
-metadata or protect content from intermediate nodes on a multihop return
-path. BPSec payload confidentiality can protect entries across that path,
-while carrier addressing, sizes, and timing may remain observable.
+content on links where it is used. It does not hide all traffic metadata
+or protect content from intermediate nodes on a multihop return path.
+BPSec payload confidentiality can protect entries across that path.
+Carrier addresses, sizes, and timing can remain visible.
 Confidentiality policies for different subjects must not be weakened by
 placing them in a common batch.<a href="#section-8.5-2" class="pilcrow">¶</a></p>
 </section>
@@ -2153,8 +2478,12 @@ code point for either placeholder.<a href="#section-9-5" class="pilcrow">¶</a><
 <span class="refAuthor">Birrane, III, E.</span> and <span class="refAuthor">K. McKeever</span>, <span class="refTitle">"Bundle Protocol Security (BPSec)"</span>, <span class="seriesInfo">RFC 9172</span>, <span class="seriesInfo">DOI 10.17487/RFC9172</span>, <time datetime="2022-01" class="refDate">January 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9172">https://www.rfc-editor.org/rfc/rfc9172</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9713">[RFC9713]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Sipos, B.</span>, <span class="refTitle">"Bundle Protocol Version 7 Administrative Record Types Registry"</span>, <span class="seriesInfo">RFC 9713</span>, <span class="seriesInfo">DOI 10.17487/RFC9713</span>, <time datetime="2025-01" class="refDate">January 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9713">https://www.rfc-editor.org/rfc/rfc9713</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9758">[RFC9758]</dt>
+      <dd>
+<span class="refAuthor">Taylor, R.</span> and <span class="refAuthor">E. Birrane III</span>, <span class="refTitle">"Updates to the 'ipn' URI Scheme"</span>, <span class="seriesInfo">RFC 9758</span>, <span class="seriesInfo">DOI 10.17487/RFC9758</span>, <time datetime="2025-05" class="refDate">May 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9758">https://www.rfc-editor.org/rfc/rfc9758</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -2179,10 +2508,11 @@ code point for either placeholder.<a href="#section-9-5" class="pilcrow">¶</a><
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">This block was motivated by discussion of the completion semantics of the
-QUIC Bundle Protocol Convergence Layer, and the observation that no
-convergence layer can, on its own, assert that a peer BPA has received a
-bundle.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">Discussion of QUIC Bundle Protocol Convergence Layer completion semantics
+motivated this work. Convergence-layer completion does not necessarily
+establish BPA reception. Its guarantees depend on the convergence-layer
+specification and implementation. Hop Reception Reports
+provide explicit, convergence-layer-independent BPA reception assertions.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
